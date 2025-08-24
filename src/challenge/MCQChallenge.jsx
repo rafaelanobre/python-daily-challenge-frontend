@@ -5,9 +5,9 @@ export function MCQChallenge({challenge, showExplanation = false}) {
   const [selectedOption, setSelectedOption] = useState(null)
   const [shouldShowExplanation, setShouldShowExplanation] = useState(showExplanation)
 
-  const options = typeof challenge.options === 'string'
-    ? JSON.parse(challenge.options)
-    : challenge.options
+  const optionsArray = typeof challenge.options === 'string'
+    ? Object.entries(JSON.parse(challenge.options))
+    : Object.entries(challenge.options)
 
   const handleOptionSelect = (index) => {
     if (selectedOption !== null) return
@@ -32,17 +32,17 @@ export function MCQChallenge({challenge, showExplanation = false}) {
     <p><strong>Difficulty</strong>: {challenge.difficulty}</p>
     <p className='challenge-title'>{challenge.title}</p>
     <div className='options'>
-      {options.map((option, index) => (
+      {optionsArray.map(([key, value], index) => (
           <div
               className={getOptionClass(index)}
-              key={index}
-                onClick={() => handleOptionSelect(index)}
+              key={key}
+              onClick={() => handleOptionSelect(index)}
           >
-            {option}
+            <span className='option-key'>{key}:</span> {value}
           </div>
       ))}
     </div>
-    {showExplanation && selectedOption !== null && (
+    {shouldShowExplanation && selectedOption !== null && (
         <div className='explanation'>
           <h4>Explanation</h4>
           <p>{challenge.explanation}</p>
